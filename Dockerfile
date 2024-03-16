@@ -1,4 +1,6 @@
-FROM debian:bullseye
+FROM debian:bookworm
+
+ARG TARGETARCH
 
 RUN export DEBIAN_FRONTEND=noninteractive && \
     apt-get update && \
@@ -6,7 +8,13 @@ RUN export DEBIAN_FRONTEND=noninteractive && \
     apt-get install -y \
       apt-transport-https build-essential chromium curl firefox-esr ffmpeg \
       imagemagick software-properties-common sudo vim wget x11-apps xorg xvfb && \
-      apt-get clean && apt-get autoclean && apt-get autoremove --purge -y
+    apt-get clean && apt-get autoclean && apt-get autoremove --purge -y
+
+# google chrome doesn't ship arm for linux
+RUN if [ $TARGETARCH = "amd64" ]; then \
+      curl https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb -o /tmp/chrome.deb && \
+      dpkg -i /tmp/chrome.deb && rm -rf /tmp/chrome.deb; \
+    fi
 
 RUN addgroup user --gid 1000 && \
     adduser user --disabled-password --gecos "" --uid 1000 --gid 1000 && \
