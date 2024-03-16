@@ -6,8 +6,8 @@ RUN export DEBIAN_FRONTEND=noninteractive && \
     apt-get update && \
     apt-get upgrade -y && \
     apt-get install -y \
-      apt-transport-https build-essential chromium curl firefox-esr ffmpeg \
-      imagemagick software-properties-common sudo vim wget x11-apps xorg xvfb && \
+      apt-transport-https build-essential chromium curl firefox-esr ffmpeg git imagemagick software-properties-common \
+      sudo tigervnc-standalone-server vim wget x11-apps xorg xvfb && \
     apt-get clean && apt-get autoclean && apt-get autoremove --purge -y
 
 # google chrome doesn't ship arm for linux
