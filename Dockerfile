@@ -17,7 +17,7 @@ RUN if [ $TARGETARCH = "amd64" ]; then \
     fi
 
 RUN git clone https://github.com/novnc/noVNC.git /opt/novnc && \
-    git clone https://github.com/novnc/websockify.git /opt/novnc/utils/websocketify && \
+    git clone https://github.com/novnc/websockify.git /opt/novnc/utils/websockify && \
     chown -R 1000:1000 /opt/novnc
 
 RUN addgroup user --gid 1000 && \
