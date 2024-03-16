@@ -6,4 +6,5 @@ example script:
   docker run --interactive --tty --rm \
     --publish 8080:8080 \
     --volume $(pwd)/examples:/examples \
+    --volume $(pwd)/tmp:/tmp/out \
     ghcr.io/manualpilot/browser bash /examples/{{script}}
