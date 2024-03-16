@@ -1,7 +1,5 @@
 #!/usr/bin/bash
 
-git clone https://github.com/novnc/noVNC.git /tmp/novnc
-
 # this one automatically goes in the background
 tigervncserver -SecurityTypes None -geometry 1920x1080
 
@@ -17,4 +15,4 @@ DISPLAY=:1 chromium --no-sandbox \
                     --window-size=1920,1080 \
                     --auto-open-devtools-for-tabs &
 
-/tmp/novnc/utils/novnc_proxy --listen 8080 --vnc localhost:5901
+/opt/novnc/utils/novnc_proxy --listen 8080 --vnc localhost:5901

@@ -16,6 +16,10 @@ RUN if [ $TARGETARCH = "amd64" ]; then \
       dpkg -i /tmp/chrome.deb && rm -rf /tmp/chrome.deb; \
     fi
 
+RUN git clone https://github.com/novnc/noVNC.git /opt/novnc && \
+    git clone https://github.com/novnc/websockify.git /opt/novnc/utils/websocketify && \
+    chown -R 1000:1000 /opt/novnc
+
 RUN addgroup user --gid 1000 && \
     adduser user --disabled-password --gecos "" --uid 1000 --gid 1000 && \
     echo "user ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers
