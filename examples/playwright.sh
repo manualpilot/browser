@@ -13,6 +13,7 @@ async function main() {
   const page = await context.newPage();
 
   await page.goto('https://example.com/');
+  await page.screenshot({ path: '/tmp/out/playwright.png', fullPage: true });
   console.log('page title', await page.title());
 
   await context.close();
@@ -36,7 +37,7 @@ xvfb-run \
       --disable-sync \
       --no-first-run \
       --window-position=0,0 \
-      --window-size=1920,1080 \
+      --window-size=800,600 \
       --remote-debugging-port=9222 \
       --auto-open-devtools-for-tabs &
 
