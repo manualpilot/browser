@@ -1,0 +1,23 @@
+name: Clean
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '0 0 1 * *'
+
+permissions:
+  contents: read
+  packages: write
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 'lts'
+      - run: npm ci
+      - run: node cleanup-tags.js
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

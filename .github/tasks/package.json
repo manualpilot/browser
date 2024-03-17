@@ -1,0 +1,8 @@
+{
+  "name": "tasks",
+  "private": true,
+  "dependencies": {
+    "octokit": "^3.1.2",
+    "undici": "^6.9.0"
+  }
+}
