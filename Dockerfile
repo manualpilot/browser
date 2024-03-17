@@ -1,6 +1,11 @@
-FROM debian:bookworm
+FROM golang AS caddy
+RUN go install github.com/caddyserver/xcaddy/cmd/xcaddy@latest && xcaddy build
 
+
+FROM debian:bookworm
 ARG TARGETARCH
+
+COPY --from=caddy /go/caddy /usr/local/bin/caddy
 
 RUN export DEBIAN_FRONTEND=noninteractive && \
     apt-get update && \
@@ -18,6 +23,7 @@ RUN if [ $TARGETARCH = "amd64" ]; then \
 
 RUN git clone https://github.com/novnc/noVNC.git /opt/novnc && \
     git clone https://github.com/novnc/websockify.git /opt/novnc/utils/websockify && \
+    rm -rf /opt/novnc/.git /opt/novnc/utils/websockify/.git && \
     chown -R 1000:1000 /opt/novnc
 
 RUN addgroup user --gid 1000 && \
