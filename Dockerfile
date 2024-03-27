@@ -1,11 +1,10 @@
-FROM golang AS caddy
-RUN go install github.com/caddyserver/xcaddy/cmd/xcaddy@latest && xcaddy build
+FROM caddy as caddy
 
 
 FROM debian:bookworm
 ARG TARGETARCH
 
-COPY --from=caddy /go/caddy /usr/local/bin/caddy
+COPY --from=caddy /usr/bin/caddy /usr/local/bin/caddy
 
 RUN export DEBIAN_FRONTEND=noninteractive && \
     apt-get update && \
