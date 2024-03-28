@@ -1,7 +1,10 @@
+ARG BASE_IMAGE=debian:bookworm
+
+
 FROM caddy as caddy
 
 
-FROM debian:bookworm
+FROM $BASE_IMAGE
 ARG TARGETARCH
 
 COPY --from=caddy /usr/bin/caddy /usr/local/bin/caddy

@@ -1,4 +1,4 @@
-name: Publish
+name: Third Party Images
 
 on:
   workflow_dispatch:
@@ -21,9 +21,6 @@ jobs:
       - name: checkout
         uses: actions/checkout@v4
 
-      - name: Set up QEMU
-        uses: docker/setup-qemu-action@v3
-
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
 
@@ -34,11 +31,12 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: docker build push
+      - name: windmill
         uses: docker/build-push-action@v5
         with:
           context: .
           push: true
           provenance: false
-          platforms: linux/amd64,linux/arm64
-          tags: ghcr.io/manualpilot/browser:latest
+          tags: ghcr.io/manualpilot/browser:windmill
+          build-args:
+            - BASE_IMAGE=ghcr.io/windmill-labs/windmill
