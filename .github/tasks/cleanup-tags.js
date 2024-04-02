@@ -25,8 +25,11 @@ async function main() {
     const resp = await fetch(`https://ghcr.io/v2/manualpilot/browser/manifests/${tag}`, options);
     const { manifests } = await resp.json();
 
-    const digests = manifests.map((m) => m.digest);
-    digests.push(resp.headers.get("docker-content-digest"));
+    const digests = [resp.headers.get("docker-content-digest")];
+
+    if (manifests) {
+      digests.push(...manifests.map((m) => m.digest));
+    }
 
     return digests;
   }));
