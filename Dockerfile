@@ -20,7 +20,7 @@ RUN export DEBIAN_FRONTEND=noninteractive && \
 # google chrome doesn't ship arm for linux
 RUN if [ $TARGETARCH = "amd64" ]; then \
       curl https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb -o /tmp/chrome.deb && \
-      dpkg -i /tmp/chrome.deb && rm -rf /tmp/chrome.deb; \
+      apt-get install -y /tmp/chrome.deb && rm -rf /tmp/chrome.deb; \
     fi
 
 RUN git clone https://github.com/novnc/noVNC.git /opt/novnc && \
