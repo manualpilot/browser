@@ -1,7 +1,7 @@
 ARG BASE_IMAGE=debian:bookworm
 
 
-FROM caddy as caddy
+FROM caddy AS caddy
 
 
 FROM $BASE_IMAGE
