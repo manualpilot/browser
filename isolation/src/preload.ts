@@ -2,8 +2,6 @@ import { contextBridge, ipcRenderer } from "electron";
 import { record } from "rrweb";
 
 window.addEventListener("DOMContentLoaded", async () => {
-  console.log("DOMContentLoaded");
-
   const sessionId = await ipcRenderer.invoke("get-session-id") as string;
   console.log({ sessionId });
 
@@ -14,14 +12,7 @@ window.addEventListener("DOMContentLoaded", async () => {
   });
 });
 
-window.addEventListener("message", (event) => {
-  console.log("message", event);
-});
-
 contextBridge.exposeInMainWorld("ipc", {
-  getSessionId: () => ipcRenderer.invoke("get-session-id"),
-  sendToChannel: (sessionId: string, data: any) => ipcRenderer.invoke(sessionId, data),
-
   // hack to get around having to inject a renderer to every page we navigate to
   handleInternalMessage: (data: string) => {
     const message = JSON.parse(data);
@@ -31,6 +22,7 @@ contextBridge.exposeInMainWorld("ipc", {
         document.querySelector(message.event.selector).click();
         break;
       }
+
       case "input": {
         const element = document.querySelector(message.event.selector) as HTMLInputElement;
         element.value = message.event.value;

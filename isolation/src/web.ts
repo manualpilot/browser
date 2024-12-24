@@ -3,6 +3,31 @@ import { Replayer } from "rrweb";
 
 const WINDOW_MARGIN = 24;
 
+const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
+
+setTimeout(async () => {
+  // noinspection InfiniteLoopJS
+  while (true) {
+    await delay(200);
+
+    const playerFrame: HTMLIFrameElement = document.querySelector("#player iframe")!;
+    if (!playerFrame) {
+      continue;
+    }
+
+    const iter = playerFrame.contentDocument!.querySelectorAll("a[href]:not([href='#'])");
+
+    if (iter.length > 0) {
+      console.log("cleaning up anchors", iter.length);
+    }
+
+    iter.forEach((el) => {
+      (el as HTMLAnchorElement).href = "#";
+      (el as HTMLAnchorElement).target = "_self"
+    });
+  }
+});
+
 document.addEventListener("DOMContentLoaded", () => {
 
   const browseElement = document.getElementById("browse") as HTMLButtonElement;
@@ -38,8 +63,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const ws = new WebSocket(url.toString());
 
-    function send(messageType: string, event: Record<string, any>) {
-      ws.send(JSON.stringify({ type: messageType, event }));
+    function send(_type: string, event: Record<string, any>) {
+      ws.send(JSON.stringify({ type: _type, event }));
     }
 
     window.addEventListener("resize", () => {
@@ -49,9 +74,8 @@ document.addEventListener("DOMContentLoaded", () => {
       });
     });
 
-    // TODO: is there a better way? registering it at the start doesn't work
-    //       also, if there's a navigation event inside the iframe, these stop working
-    setTimeout(async () => {
+    // TODO: do we need to remove event listeners
+    const onPageLoad = () => {
       console.log("registering interaction handlers");
       const playerFrame: HTMLIFrameElement = document.querySelector("#player iframe")!;
       const frameDocument = playerFrame.contentDocument!
@@ -77,7 +101,7 @@ document.addEventListener("DOMContentLoaded", () => {
           value: (event.target as HTMLInputElement).value,
         });
       });
-    }, 3000);
+    };
 
     ws.addEventListener("message", (event) => {
       const data = JSON.parse(event.data);
@@ -89,6 +113,10 @@ document.addEventListener("DOMContentLoaded", () => {
         }
         case "navigation": {
           urlElement.value = data.event.url;
+          break;
+        }
+        case "loaded": {
+          onPageLoad();
           break;
         }
         default: {

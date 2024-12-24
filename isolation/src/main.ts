@@ -42,6 +42,9 @@ app.whenReady().then(async () => {
 
     console.log("new session", { sessionId });
 
+    function send(_type: string, event: Record<string, any>) {
+      socket.send(JSON.stringify({ type: _type, event }));
+    }
     const window = new BrowserWindow({
       width: initialWidth,
       height: initialHeight,
@@ -54,13 +57,12 @@ app.whenReady().then(async () => {
 
     window.webContents.on("will-navigate", (event) => {
       if (event.isMainFrame) {
-        socket.send(JSON.stringify({
-          type: "navigation",
-          event: {
-            url: event.url,
-          },
-        }));
+        send("navigation", { url: event.url });
       }
+    });
+
+    window.webContents.on("did-finish-load", () => {
+      send("loaded", {});
     });
 
     sessions[window.id] = sessionId;
@@ -70,7 +72,7 @@ app.whenReady().then(async () => {
     });
 
     ipcMain.handle(sessionId, (_, payload) => {
-      socket.send(JSON.stringify(payload));
+      send(payload.type, payload.event);
     });
 
     socket.on("message", (data) => {
