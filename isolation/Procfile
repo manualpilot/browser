@@ -1,0 +1,3 @@
+vnc: tigervncserver -fg -SecurityTypes None -geometry 1920x1080
+novnc: /opt/novnc/utils/novnc_proxy --listen 8000 --vnc localhost:5901
+electron: npm run start
