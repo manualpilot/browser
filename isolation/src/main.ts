@@ -52,6 +52,17 @@ app.whenReady().then(async () => {
       },
     });
 
+    window.webContents.on("will-navigate", (event) => {
+      if (event.isMainFrame) {
+        socket.send(JSON.stringify({
+          type: "navigation",
+          event: {
+            url: event.url,
+          },
+        }));
+      }
+    });
+
     sessions[window.id] = sessionId;
 
     setTimeout(async () => {

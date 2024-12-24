@@ -1,0 +1,14 @@
+# RUN:
+
+- `just start`
+- (optional) visit vnc viewer to see what is happening remotely http://localhost:8000/vnc.html
+- visit http://localhost:8080/ to use remote browser
+
+# TODO
+
+- cross-origin iframes
+- run with sandbox (https://github.com/electron/electron/issues/42510)
+- deal with navigation events in client side
+- cover all situations where client can navigate outside the isolated site
+  - might have to rewrite all hrefs in client side
+- audio / video via webrtc

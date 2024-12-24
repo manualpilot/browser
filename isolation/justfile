@@ -2,5 +2,6 @@ start:
   docker build -t browser-isolation .
   docker run --rm -it \
     -u 1000:1000 \
-    -v ./:/home/user/workspace \
+    -p 127.0.0.1:8000:8000 \
+    -p 127.0.0.1:8080:8080 \
     browser-isolation

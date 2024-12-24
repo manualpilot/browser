@@ -4,6 +4,10 @@ import { Replayer } from "rrweb";
 const WINDOW_MARGIN = 24;
 
 document.addEventListener("DOMContentLoaded", () => {
+
+  const browseElement = document.getElementById("browse") as HTMLButtonElement;
+  const urlElement = document.getElementById("url") as HTMLInputElement;
+
   const player = new Replayer([], {
     root: document.getElementById("player")!,
     liveMode: true,
@@ -14,8 +18,11 @@ document.addEventListener("DOMContentLoaded", () => {
   player.enableInteract();
   player.startLive();
 
-  document.getElementById("navigate")!.onclick = (ev) => {
+  browseElement.onclick = (ev) => {
     ev.preventDefault();
+
+    browseElement.disabled = true;
+    urlElement.disabled = true;
 
     const url = new URL(
       [
@@ -25,7 +32,7 @@ document.addEventListener("DOMContentLoaded", () => {
       ].join("")
     );
 
-    url.searchParams.set("url", (document.getElementById("url") as HTMLInputElement).value);
+    url.searchParams.set("url", urlElement.value);
     url.searchParams.set("width", (window.innerWidth - WINDOW_MARGIN).toString());
     url.searchParams.set("height", (window.innerHeight - WINDOW_MARGIN).toString());
 
@@ -78,6 +85,10 @@ document.addEventListener("DOMContentLoaded", () => {
       switch (data.type) {
         case "recording": {
           player.addEvent(data.event);
+          break;
+        }
+        case "navigation": {
+          urlElement.value = data.event.url;
           break;
         }
         default: {
