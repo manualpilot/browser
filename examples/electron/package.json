@@ -1,5 +1,5 @@
 {
-  "name": "remote-browser",
+  "name": "browser-isolation-electron",
   "private": true,
   "main": "dist/main.js",
   "scripts": {
