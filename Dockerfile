@@ -1,21 +1,26 @@
-ARG BASE_IMAGE=debian:bookworm
+FROM golang:bookworm AS golang
 
+RUN go install github.com/DarthSim/overmind/v2@latest
+RUN git clone https://github.com/caddyserver/caddy.git && \
+    cd caddy/cmd/caddy/ && \
+    go build
 
-FROM caddy AS caddy
-
-
-FROM $BASE_IMAGE
+FROM debian:bookworm
 ARG TARGETARCH
 
-COPY --from=caddy /usr/bin/caddy /usr/local/bin/caddy
+COPY --from=golang /go/bin/overmind /usr/local/bin/overmind
+COPY --from=golang /go/caddy/cmd/caddy/caddy /usr/local/bin/caddy
 
 RUN export DEBIAN_FRONTEND=noninteractive && \
     apt-get update && \
     apt-get upgrade -y && \
     apt-get install -y \
       apt-transport-https build-essential chromium curl firefox-esr ffmpeg git imagemagick software-properties-common \
-      sudo tigervnc-standalone-server vim wget x11-apps xorg xvfb && \
+      sudo tigervnc-standalone-server tmux vim wget x11-apps xorg xvfb && \
     apt-get clean && apt-get autoclean && apt-get autoremove --purge -y
+
+# TODO: this is included in debian 13
+RUN curl --proto '=https' --tlsv1.2 -sSf https://just.systems/install.sh | bash -s -- --to /usr/local/bin
 
 # google chrome doesn't ship arm for linux
 RUN if [ $TARGETARCH = "amd64" ]; then \
