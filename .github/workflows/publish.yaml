@@ -34,11 +34,22 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: docker build push
-        uses: docker/build-push-action@v5
+      - name: (base) docker build push
+        uses: docker/build-push-action@v6
         with:
           context: .
+          file: base.Dockerfile
           push: true
           provenance: false
           platforms: linux/amd64,linux/arm64
-          tags: ghcr.io/manualpilot/browser:latest
+          tags: ghcr.io/manualpilot/browser:base,ghcr.io/manualpilot/browser:latest
+
+      - name: (batteries) docker build push
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: batteries.Dockerfile
+          push: true
+          provenance: false
+          platforms: linux/amd64,linux/arm64
+          tags: ghcr.io/manualpilot/browser:batteries
