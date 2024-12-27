@@ -1,14 +1,12 @@
-FROM ghcr.io/manualpilot/browser:latest
+FROM ghcr.io/manualpilot/browser:batteries
 
-RUN curl -fsSL https://deb.nodesource.com/setup_22.x | sudo -E bash && \
-    sudo apt-get install -y nodejs
-
-ADD --chmod=755 https://raw.githubusercontent.com/chrismytton/shoreman/refs/heads/master/shoreman.sh /bin/shoreman.sh
+VOLUME /home/user/workspace/node_modules
 ADD --chown=1000:1000 . /home/user/workspace
 
-USER 1000:1000
 WORKDIR /home/user/workspace
 RUN npm ci
 
+ENV DISPLAY=:1
+ENV ELECTRON_ENABLE_LOGGING=1
 EXPOSE 8000
-CMD ["/bin/shoreman.sh"]
+CMD ["overmind", "start"]

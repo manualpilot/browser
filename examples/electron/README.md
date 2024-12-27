@@ -7,6 +7,7 @@
 # TODO
 
 - cross-origin iframes
+- run without root (currently get sigtrap with no logs)
 - run with sandbox (https://github.com/electron/electron/issues/42510)
 - cover all situations where client can navigate outside the isolated site
   - might have to rewrite all hrefs in client side
